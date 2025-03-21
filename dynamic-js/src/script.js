@@ -229,34 +229,36 @@ events.forEach((eachEvent) => {
   }
 });
 
-// Click to change hero images
+// Auto render or click to change hero images
 const heroImgs = document.querySelectorAll(".hero-imgs");
 let heroSlideStart = 0;
 let heroSlideEnd = (heroImgs.length - 1) * 100;
-document.querySelector(".hero-btn-r").addEventListener("click", (e) => {
-  e.stopPropagation();
-  if (heroSlideStart != -heroSlideEnd) {
-    heroSlideStart -= 100;
-    // sessionStorage.setItem("slideStart", heroSlideStart);
-  }
-  // else if (heroSlideStart === heroSlideEnd) {
-  //   sessionStorage.setItem("slideStart", 500);
-  // }
-  heroImgs.forEach((eachImg) => {
-    // eachImg.classList.add(`-translate-x-[${heroSlideStart}%]`);
-    eachImg.style.transform = `translateX(${heroSlideStart}%)`;
-  });
-});
-document.querySelector(".hero-btn-l").addEventListener("click", (e) => {
-  e.stopPropagation();
+function handleBtnL() {
   if (heroSlideStart < 0) {
     heroSlideStart += 100;
   }
   heroImgs.forEach((eachImg) => {
-    // eachImg.classList.remove(`-translate-x-[${heroSlideEnd}]`);
     eachImg.style.transform = `translateX(${heroSlideStart}%)`;
   });
-});
+}
+function handleBtnR() {
+  if (heroSlideStart >= -heroSlideEnd + 100) {
+    heroSlideStart -= 100;
+  }
+  heroImgs.forEach((eachImg) => {
+    eachImg.style.transform = `translateX(${heroSlideStart}%)`;
+  });
+}
+function autoRender() {
+  if (heroSlideStart >= -heroSlideEnd + 100) {
+    handleBtnR();
+  } else {
+    heroSlideStart = 100;
+  }
+}
+document.querySelector(".hero-btn-r").addEventListener("click", handleBtnR);
+document.querySelector(".hero-btn-l").addEventListener("click", handleBtnL);
+setInterval(autoRender, 2000);
 
 // Click to slide row3 items
 const slideRow3 = document.querySelectorAll(".slide-row3-box");
